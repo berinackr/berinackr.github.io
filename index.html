@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BeeMelody - Acoustic Monitoring of Beehive Health</title>
     <style>
+        :root {
+            --honey-dark: #FF8C00;
+            --honey-main: #FFA500;
+            --honey-light: #FFB84D;
+            --honey-pale: #FFE4B3;
+            --bg-light: #FAFAFA;
+            --bg-white: #FFFFFF;
+            --text-dark: #2D2D2D;
+            --text-gray: #666666;
+            --text-light: #999999;
+            --border-light: #E8E8E8;
+            --shadow: rgba(255, 140, 0, 0.15);
+            --shadow-dark: rgba(0, 0, 0, 0.08);
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --critical: #F44336;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,11 +30,10 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F0 50%, #FFE4B3 100%);
             min-height: 100vh;
-            overflow-x: hidden;
-            color: #2c3e50;
+            color: var(--text-dark);
         }
 
         /* Hexagon Pattern Background */
@@ -28,104 +45,191 @@
             bottom: 0;
             opacity: 0.03;
             z-index: 0;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l26 15v30L30 60 4 45V15z' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E");
-            background-size: 60px 60px;
-            animation: patternFloat 30s linear infinite;
+            background-image:
+                url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0l35 20v40L40 80 5 60V20z' fill='none' stroke='%23FFA500' stroke-width='2'/%3E%3C/svg%3E");
+            background-size: 80px 80px;
+            animation: patternFloat 40s linear infinite;
         }
 
         @keyframes patternFloat {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(60px, 60px) rotate(360deg); }
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(80px, 80px); }
         }
 
-        /* Interactive Bee */
+        /* Floating Honey Drops */
+        .honey-drops {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .honey-drop {
+            position: absolute;
+            width: 4px;
+            height: 12px;
+            background: linear-gradient(180deg, transparent, var(--honey-light));
+            border-radius: 0 0 50% 50%;
+            animation: dropFall 8s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes dropFall {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Interactive Bee - DOKUNULMAYACAK */
         .interactive-bee {
             position: fixed;
             top: 50%;
             right: 5%;
-            width: 80px;
-            height: 60px;
+            width: 270px;
+            height: 100px;
+            transform: scale(0.4) translate(100%, -100%);
+            transform-origin: 100% 50%;
             cursor: pointer;
             z-index: 100;
             transition: all 0.3s ease;
-            transform: translateY(-50%);
         }
-
+        
         .interactive-bee:hover {
-            transform: translateY(-50%) scale(1.1);
+            transform: scale(0.45) translate(80%, -100%);
         }
 
-        .bee-body {
-            width: 50px;
-            height: 30px;
-            background: linear-gradient(45deg, #f39c12, #e67e22);
-            border-radius: 50px;
-            position: relative;
-            margin: 15px auto;
-            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.3);
-        }
-
-        .bee-body::before {
-            content: '';
+        .bee {
+            height: 100px;
+            width: 270px;
+            background-color: rgba(255, 255, 255, 0.4);
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                90deg,
-                #2c3e50 0px,
-                #2c3e50 3px,
-                transparent 3px,
-                transparent 8px
+            border-radius: 50px;
+            animation: fly 4s infinite;
+        }
+
+        @keyframes fly {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-50px); }
+        }
+
+        .bee:before {
+            position: absolute;
+            content: "";
+            height: 200px;
+            width: 140px;
+            background: linear-gradient(
+                #ffec02 70%,
+                #202020 70%,
+                #202020 75%,
+                #ffec02 75%,
+                #ffec02 80%,
+                #202020 80%,
+                #202020 85%,
+                #ffec02 85%,
+                #ffec02 90%,
+                #202020 90%,
+                #202020 95%,
+                #ffec02 95%
             );
-            border-radius: 50px;
+            border-radius: 70px;
+            left: 65px;
+            bottom: -45px;
         }
-
-        .bee-wing {
+        
+        .eye, .eye:before {
             position: absolute;
+            height: 13.5px;
             width: 25px;
-            height: 15px;
-            background: rgba(255, 255, 255, 0.8);
+            border: 7px solid #202020;
+            border-radius: 20px 20px 0 0;
+            bottom: 95px;
+            border-bottom: none;
+        }
+        .eye { left: 98px; }
+        .eye:before { content: ""; bottom: 0; left: 40px; }
+
+        .antenna, .antenna:before {
+            position: absolute;
+            height: 50px;
+            width: 8px;
+            background-color: #202020;
+        }
+        .antenna {
+            left: 164px;
+            bottom: 130px;
+            transform: rotate(25deg);
+            z-index: -1;
+        }
+        .antenna:before {
+            content: "";
+            right: 55px;
+            top: 25px;
+            transform: rotate(-50deg);
+        }
+        .antenna:after {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            background-color: #202020;
             border-radius: 50%;
-            animation: wingFlap 0.5s infinite;
+            left: -6px;
+            bottom: 40px;
+            box-shadow: -72px 35px #202020;
         }
 
-        .bee-wing.left {
-            top: -5px;
-            left: -8px;
-            transform-origin: bottom right;
+        .mouth {
+            position: absolute;
+            height: 40px;
+            width: 80px;
+            background: radial-gradient(circle at 50% 100%, #ff90a3 15px, #202020 16px);
+            top: 20px;
+            left: 93px;
+            border-radius: 0 0 40px 40px;
         }
-
-        .bee-wing.right {
-            top: -5px;
-            right: -8px;
-            transform-origin: bottom left;
-            animation-delay: 0.25s;
-        }
-
-        @keyframes wingFlap {
-            0%, 100% { transform: rotateZ(0deg) scaleY(1); }
-            50% { transform: rotateZ(15deg) scaleY(0.8); }
+        .mouth:before {
+            position: absolute;
+            content: "";
+            height: 10px;
+            width: 50px;
+            background-color: #ffffff;
+            left: 14px;
+            top: -0.5px;
         }
 
         .mode-indicator {
             position: absolute;
-            bottom: -25px;
+            bottom: -50px;
             left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.9);
+            transform: translateX(-50%) scale(2.5);
+            background: var(--honey-main);
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 600;
-            color: #667eea;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 4px 12px var(--shadow);
+            white-space: nowrap;
         }
 
         /* Header */
         header {
             text-align: center;
-            padding: 3rem 2rem 2rem;
+            padding: 4rem 2rem 3rem;
             position: relative;
             z-index: 10;
         }
@@ -134,18 +238,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .logo-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--honey-main), var(--honey-dark));
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
             position: relative;
-            animation: logoFloat 4s ease-in-out infinite;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            animation: blobFloat 6s ease-in-out infinite;
+            box-shadow: 0 15px 40px var(--shadow);
         }
 
         .logo-icon::before {
@@ -154,35 +258,48 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 2.5rem;
+            font-size: 3rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(5deg); }
+        @keyframes blobFloat {
+            0%, 100% {
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+            }
+            50% {
+                border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+                transform: translateY(-15px) rotate(5deg);
+            }
+            75% {
+                border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+            }
         }
 
         h1 {
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 4rem;
+            background: linear-gradient(135deg, var(--honey-dark), var(--honey-main));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-weight: 700;
+            font-weight: 900;
             margin: 0;
-            text-shadow: none;
+            letter-spacing: -1px;
         }
 
         .subtitle {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.9);
-            margin-top: 0.5rem;
-            font-weight: 300;
+            font-size: 1.4rem;
+            color: var(--text-gray);
+            margin-top: 0.8rem;
+            font-weight: 500;
         }
 
         /* Main Container */
         .container {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
             padding: 2rem;
             position: relative;
@@ -190,113 +307,174 @@
         }
 
         /* Analysis Card */
-        .analysis-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .analysis-card-wrapper {
             position: relative;
+            min-height: 600px;
+        }
+        
+        .analysis-card {
+            background: var(--bg-white);
+            border-radius: 40px;
+            box-shadow: 
+                0 30px 80px var(--shadow-dark),
+                0 0 0 1px var(--border-light);
             overflow: hidden;
-            transition: all 0.5s ease;
+            position: relative;
+            min-height: inherit;
         }
 
+        /* Honey Drip Border Top */
         .analysis-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 6px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
-            background-size: 400% 100%;
-            animation: gradientShift 8s ease infinite;
+            height: 8px;
+            background: linear-gradient(90deg, 
+                var(--honey-main) 0%, 
+                var(--honey-light) 25%,
+                var(--honey-main) 50%,
+                var(--honey-light) 75%,
+                var(--honey-main) 100%);
+            background-size: 200% 100%;
+            animation: honeyFlow 4s linear infinite;
+            z-index: 2;
         }
 
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        @keyframes honeyFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Mode Transition */
+        .mode-transition {
+            padding: 4rem 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+        }
+
+        .mode-transition.active {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            pointer-events: auto;
+            display: block;
         }
 
         .card-header {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 2rem;
-            gap: 1rem;
+            margin-bottom: 2.5rem;
+            gap: 1.5rem;
         }
 
         .card-icon {
-            font-size: 4rem;
-            animation: iconFloat 3s ease-in-out infinite;
+            font-size: 5rem;
+            filter: drop-shadow(0 4px 8px rgba(255, 140, 0, 0.2));
+            animation: iconBounce 3s ease-in-out infinite;
         }
 
-        @keyframes iconFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
         }
 
         .card-title {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--honey-dark), var(--honey-main));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-weight: 700;
+            font-weight: 800;
             margin: 0;
         }
 
         .card-description {
-            color: #64748b;
-            margin-bottom: 2rem;
-            line-height: 1.7;
-            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            font-size: 1.15rem;
             text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Upload Area */
         .upload-area {
-            border: 3px dashed #e2e8f0;
-            border-radius: 20px;
-            padding: 3rem 2rem;
+            border: 3px dashed var(--honey-light);
+            border-radius: 25px;
+            padding: 4rem 3rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            background: linear-gradient(135deg, 
+                rgba(255, 228, 179, 0.2) 0%, 
+                rgba(255, 255, 255, 0.5) 100%);
             transition: all 0.4s ease;
             cursor: pointer;
             position: relative;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 165, 0, 0.1), 
+                transparent);
+            transition: left 0.6s;
+        }
+
+        .upload-area:hover::before {
+            left: 100%;
         }
 
         .upload-area:hover {
-            border-color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-color: var(--honey-main);
+            background: linear-gradient(135deg, 
+                rgba(255, 228, 179, 0.4) 0%, 
+                rgba(255, 255, 255, 0.7) 100%);
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 20px 50px var(--shadow);
         }
 
         .upload-area.dragover {
-            border-color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+            border-color: var(--honey-dark);
+            background: rgba(255, 228, 179, 0.5);
             transform: scale(1.02);
         }
 
         .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #667eea;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 4px 8px var(--shadow));
         }
 
         .upload-text {
-            color: #475569;
-            font-weight: 600;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
         }
 
         .upload-subtext {
-            font-size: 1rem;
-            color: #94a3b8;
+            font-size: 1.05rem;
+            color: var(--text-light);
         }
 
         .file-input {
@@ -305,92 +483,109 @@
 
         /* Audio Visualizer */
         .audio-visualizer {
-            height: 120px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            border-radius: 15px;
-            margin: 2rem 0;
+            height: 140px;
+            background: linear-gradient(135deg, 
+                rgba(255, 228, 179, 0.3), 
+                rgba(255, 255, 255, 0.5));
+            border-radius: 20px;
+            margin: 2.5rem 0;
             display: none;
             align-items: end;
             justify-content: center;
-            gap: 3px;
-            padding: 15px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
+            gap: 4px;
+            padding: 20px;
+            border: 2px solid var(--honey-pale);
+            box-shadow: inset 0 2px 10px rgba(255, 165, 0, 0.1);
         }
 
         .bar {
-            width: 5px;
-            background: linear-gradient(to top, #667eea, #764ba2);
-            border-radius: 3px;
+            width: 6px;
+            background: linear-gradient(to top, var(--honey-dark), var(--honey-light));
+            border-radius: 4px;
             transition: height 0.2s ease;
-            min-height: 5px;
+            min-height: 6px;
+            box-shadow: 0 2px 4px var(--shadow);
         }
 
         /* Image Preview */
         .image-preview {
             display: none;
-            margin: 2rem 0;
+            margin: 2.5rem auto;
+            padding: 20px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.8), 
+                rgba(255, 228, 179, 0.3));
+            border-radius: 25px;
+            box-shadow: 0 10px 30px var(--shadow);
+            max-width: 450px;
             text-align: center;
+            border: 2px solid var(--honey-pale);
         }
 
         .preview-img {
             max-width: 100%;
-            height: 250px;
-            object-fit: cover;
+            height: auto;
+            max-height: 280px;
+            object-fit: contain;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            border: 3px solid rgba(102, 126, 234, 0.2);
+            box-shadow: 0 15px 40px var(--shadow-dark);
+            border: 3px solid white;
         }
 
         /* Button */
         .analyze-btn {
             width: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--honey-dark), var(--honey-main));
             color: white;
             border: none;
-            padding: 1.2rem 2rem;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            padding: 1.5rem 2.5rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            letter-spacing: 1.5px;
+            box-shadow: 0 15px 35px var(--shadow);
             position: relative;
             overflow: hidden;
         }
 
+        .analyze-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .analyze-btn:not(:disabled):hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
         .analyze-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
+            box-shadow: 0 5px 15px var(--shadow);
         }
 
         .analyze-btn:not(:disabled):hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-        }
-
-        .analyze-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .analyze-btn:not(:disabled):hover::before {
-            left: 100%;
+            box-shadow: 0 20px 50px rgba(255, 140, 0, 0.3);
         }
 
         /* Loading Animation */
         .loading {
             display: none;
             text-align: center;
-            padding: 3rem;
+            padding: 4rem;
         }
 
         .loading.show {
@@ -399,9 +594,9 @@
         }
 
         .honeycomb-loader {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
             position: relative;
         }
 
@@ -410,75 +605,100 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--honey-main), var(--honey-dark));
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            animation: honeycombSpin 2s linear infinite;
+            animation: honeycombSpin 2s ease-in-out infinite;
+            box-shadow: 0 10px 30px var(--shadow);
         }
 
         @keyframes honeycombSpin {
             0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(1.15); }
             100% { transform: rotate(360deg) scale(1); }
         }
 
         .loading-text {
-            font-size: 1.2rem;
-            color: #667eea;
-            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--honey-dark);
+            font-weight: 700;
         }
 
         /* Results */
         .results {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 2.5rem;
-            margin-top: 2rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--bg-white);
+            border-radius: 35px;
+            padding: 3rem;
+            margin-top: 2.5rem;
+            box-shadow: 
+                0 25px 70px var(--shadow-dark),
+                0 0 0 1px var(--border-light);
+            border-top: 6px solid var(--honey-main);
             display: none;
         }
 
         .results.show {
             display: block;
-            animation: slideUp 0.6s ease-out;
+            animation: slideUp 0.7s ease-out;
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
+            from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .results-title {
-            font-size: 1.8rem;
-            color: #667eea;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--honey-dark), var(--honey-main));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            font-weight: 800;
             text-align: center;
         }
 
         .result-item {
             display: flex;
             align-items: center;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-            border-radius: 15px;
-            border-left: 5px solid;
-            transition: transform 0.3s ease;
+            padding: 1.8rem 2rem;
+            margin: 1.2rem 0;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.8), 
+                rgba(255, 248, 240, 0.8));
+            border-radius: 20px;
+            border-left: 6px solid;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
         }
 
         .result-item:hover {
-            transform: translateX(10px);
+            transform: translateX(8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        .result-item.healthy { border-left-color: #10b981; }
-        .result-item.warning { border-left-color: #f59e0b; }
-        .result-item.critical { border-left-color: #ef4444; }
+        .result-item.healthy { 
+            border-left-color: var(--success);
+            background: linear-gradient(135deg, 
+                rgba(76, 175, 80, 0.05), 
+                rgba(255, 255, 255, 0.8));
+        }
+        .result-item.warning { 
+            border-left-color: var(--warning);
+            background: linear-gradient(135deg, 
+                rgba(255, 152, 0, 0.05), 
+                rgba(255, 255, 255, 0.8));
+        }
+        .result-item.critical { 
+            border-left-color: var(--critical);
+            background: linear-gradient(135deg, 
+                rgba(244, 67, 54, 0.05), 
+                rgba(255, 255, 255, 0.8));
+        }
 
         .result-icon {
-            font-size: 1.8rem;
-            margin-right: 1.5rem;
+            font-size: 2.5rem;
+            margin-right: 1.8rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
         .result-text {
@@ -486,56 +706,53 @@
         }
 
         .result-value {
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 1.1rem;
-            margin-bottom: 0.3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
         }
 
         .result-description {
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-
-        /* Mode Transition */
-        .mode-transition {
-            opacity: 0;
-            transform: scale(0.95);
-            transition: all 0.5s ease;
-        }
-
-        .mode-transition.active {
-            opacity: 1;
-            transform: scale(1);
+            color: var(--text-gray);
+            font-size: 1rem;
+            line-height: 1.5;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
             .interactive-bee {
                 right: 2%;
-                width: 60px;
-                height: 45px;
+                transform: scale(0.3) translate(100%, -100%);
             }
-            
-            .bee-body {
-                width: 40px;
-                height: 25px;
+            .interactive-bee:hover {
+                transform: scale(0.35) translate(80%, -100%);
             }
-            
+
             h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
-            
+
             .container {
                 padding: 1rem;
             }
-            
-            .analysis-card {
-                padding: 2rem;
+
+            .card-title {
+                font-size: 2.2rem;
             }
             
-            .card-title {
-                font-size: 2rem;
+            .analysis-card-wrapper {
+                min-height: 550px;
+            }
+            .mode-transition {
+                padding: 2.5rem 2rem;
+            }
+
+            .result-item {
+                padding: 1.5rem;
+            }
+
+            .upload-area {
+                padding: 3rem 2rem;
             }
         }
 
@@ -546,14 +763,23 @@
     </style>
 </head>
 <body>
-    <!-- Background Pattern -->
     <div class="bg-pattern"></div>
     
-    <!-- Interactive Bee -->
+    <!-- Animated Honey Drops -->
+    <div class="honey-drops">
+        <div class="honey-drop" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="honey-drop" style="left: 25%; animation-delay: 2s;"></div>
+        <div class="honey-drop" style="left: 40%; animation-delay: 4s;"></div>
+        <div class="honey-drop" style="left: 60%; animation-delay: 1s;"></div>
+        <div class="honey-drop" style="left: 75%; animation-delay: 3s;"></div>
+        <div class="honey-drop" style="left: 90%; animation-delay: 5s;"></div>
+    </div>
+
     <div class="interactive-bee" id="modeSwitcher">
-        <div class="bee-body">
-            <div class="bee-wing left"></div>
-            <div class="bee-wing right"></div>
+        <div class="bee">
+            <div class="eye"></div>
+            <div class="antenna"></div>
+            <div class="mouth"></div>
         </div>
         <div class="mode-indicator" id="modeIndicator">Görsel Analiz</div>
     </div>
@@ -569,290 +795,76 @@
     </header>
 
     <div class="container">
-        <!-- Audio Analysis Mode -->
-        <div class="analysis-card mode-transition active" id="audioMode">
-            <div class="card-header">
-                <span class="card-icon">🎵</span>
-                <h2 class="card-title">Ses Analizi</h2>
+        <div class="analysis-card-wrapper">
+            <div class="analysis-card">
+
+                <div class="mode-transition active" id="audioMode">
+                    <div class="card-header">
+                        <span class="card-icon">🎵</span>
+                        <h2 class="card-title">Ses Analizi</h2>
+                    </div>
+
+                    <p class="card-description">
+                        Arı kovanınızdan kaydettiğiniz ses dosyasını yükleyerek kovan sağlığını analiz edin.
+                        Gelişmiş yapay zeka algoritmaları ile arıların davranış kalıplarını ve sağlık durumunu değerlendiriyoruz.
+                    </p>
+
+                    <div class="upload-area" onclick="document.getElementById('audioFile').click()">
+                        <div class="upload-icon">🎤</div>
+                        <p class="upload-text">Ses dosyasını buraya sürükleyin veya tıklayın</p>
+                        <p class="upload-subtext">Desteklenen formatlar: WAV, MP3, M4A (Maks. 10MB)</p>
+                    </div>
+                    <input type="file" id="audioFile" class="file-input" accept=".wav,.mp3,.m4a" />
+
+                    <div class="audio-visualizer" id="audioVisualizer"></div>
+
+                    <button class="analyze-btn" id="analyzeAudio" disabled>
+                        🔍 Ses Analizi Başlat
+                    </button>
+                </div>
+
+                <div class="mode-transition" id="imageMode">
+                    <div class="card-header">
+                        <span class="card-icon">📸</span>
+                        <h2 class="card-title">Görsel Analizi</h2>
+                    </div>
+
+                    <p class="card-description">
+                        Arı fotoğraflarını yükleyerek detaylı görsel sağlık analizi yapın.
+                        Bilgisayarlı görü teknolojisi ile arıların fiziksel durumunu ve hastalık belirtilerini tespit ediyoruz.
+                    </p>
+
+                    <div class="upload-area" onclick="document.getElementById('imageFile').click()">
+                        <div class="upload-icon">📷</div>
+                        <p class="upload-text">Arı fotoğrafını buraya sürükleyin veya tıklayın</p>
+                        <p class="upload-subtext">Desteklenen formatlar: JPG, PNG, WEBP (Maks. 5MB)</p>
+                    </div>
+                    <input type="file" id="imageFile" class="file-input" accept=".jpg,.jpeg,.png,.webp" />
+
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" class="preview-img" alt="Yüklenen Arı Fotoğrafı" />
+                    </div>
+
+                    <button class="analyze-btn" id="analyzeImage" disabled>
+                        🔍 Görsel Analizi Başlat
+                    </button>
+                </div>
+
             </div>
-            
-            <p class="card-description">
-                Arı kovanınızdan kaydettiğiniz ses dosyasını yükleyerek kovan sağlığını analiz edin. 
-                Gelişmiş yapay zeka algoritmaları ile arıların davranış kalıplarını ve sağlık durumunu değerlendiriyoruz.
-            </p>
-            
-            <div class="upload-area" onclick="document.getElementById('audioFile').click()">
-                <div class="upload-icon">🎤</div>
-                <p class="upload-text">Ses dosyasını buraya sürükleyin veya tıklayın</p>
-                <p class="upload-subtext">Desteklenen formatlar: WAV, MP3, M4A (Maks. 10MB)</p>
-            </div>
-            <input type="file" id="audioFile" class="file-input" accept=".wav,.mp3,.m4a" />
-            
-            <div class="audio-visualizer" id="audioVisualizer">
-                <!-- Audio bars will be generated here -->
-            </div>
-            
-            <button class="analyze-btn" id="analyzeAudio" disabled>
-                🔍 Ses Analizi Başlat
-            </button>
         </div>
 
-        <!-- Image Analysis Mode -->
-        <div class="analysis-card mode-transition" id="imageMode">
-            <div class="card-header">
-                <span class="card-icon">📸</span>
-                <h2 class="card-title">Görsel Analizi</h2>
-            </div>
-            
-            <p class="card-description">
-                Arı fotoğraflarını yükleyerek detaylı görsel sağlık analizi yapın. 
-                Bilgisayarlı görü teknolojisi ile arıların fiziksel durumunu ve hastalık belirtilerini tespit ediyoruz.
-            </p>
-            
-            <div class="upload-area" onclick="document.getElementById('imageFile').click()">
-                <div class="upload-icon">📷</div>
-                <p class="upload-text">Arı fotoğrafını buraya sürükleyin veya tıklayın</p>
-                <p class="upload-subtext">Desteklenen formatlar: JPG, PNG, WEBP (Maks. 5MB)</p>
-            </div>
-            <input type="file" id="imageFile" class="file-input" accept=".jpg,.jpeg,.png,.webp" />
-            
-            <div class="image-preview" id="imagePreview">
-                <img id="previewImg" class="preview-img" />
-            </div>
-            
-            <button class="analyze-btn" id="analyzeImage" disabled>
-                🔍 Görsel Analizi Başlat
-            </button>
-        </div>
-
-        <!-- Loading Animation -->
         <div class="loading" id="loading">
             <div class="honeycomb-loader"></div>
             <p class="loading-text">Yapay zeka modeli çalışıyor... Lütfen bekleyin.</p>
         </div>
 
-        <!-- Results Area -->
         <div class="results" id="results">
             <h3 class="results-title">📊 Analiz Sonuçları</h3>
-            <div id="resultsContent">
-                <!-- Results will be populated here -->
-            </div>
+            <div id="resultsContent"></div>
         </div>
     </div>
 
     <script>
-        // Elements
         const modeSwitcher = document.getElementById('modeSwitcher');
         const modeIndicator = document.getElementById('modeIndicator');
         const audioMode = document.getElementById('audioMode');
-        const imageMode = document.getElementById('imageMode');
-        const audioFile = document.getElementById('audioFile');
-        const imageFile = document.getElementById('imageFile');
-        const analyzeAudioBtn = document.getElementById('analyzeAudio');
-        const analyzeImageBtn = document.getElementById('analyzeImage');
-        const loading = document.getElementById('loading');
-        const results = document.getElementById('results');
-        const resultsContent = document.getElementById('resultsContent');
-        const audioVisualizer = document.getElementById('audioVisualizer');
-        const imagePreview = document.getElementById('imagePreview');
-        const previewImg = document.getElementById('previewImg');
-
-        let currentMode = 'audio';
-
-        // Mode switching
-        modeSwitcher.addEventListener('click', function() {
-            if (currentMode === 'audio') {
-                currentMode = 'image';
-                audioMode.classList.remove('active');
-                imageMode.classList.add('active');
-                modeIndicator.textContent = 'Ses Analiz';
-                
-                // Add bounce effect to bee
-                this.style.transform = 'translateY(-50%) scale(1.2)';
-                setTimeout(() => {
-                    this.style.transform = 'translateY(-50%) scale(1)';
-                }, 300);
-            } else {
-                currentMode = 'audio';
-                imageMode.classList.remove('active');
-                audioMode.classList.add('active');
-                modeIndicator.textContent = 'Görsel Analiz';
-                
-                this.style.transform = 'translateY(-50%) scale(1.2)';
-                setTimeout(() => {
-                    this.style.transform = 'translateY(-50%) scale(1)';
-                }, 300);
-            }
-            
-            // Hide results when switching modes
-            results.classList.remove('show');
-        });
-
-        // Drag and drop functionality
-        document.querySelectorAll('.upload-area').forEach(area => {
-            area.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                area.classList.add('dragover');
-            });
-
-            area.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                area.classList.remove('dragover');
-            });
-
-            area.addEventListener('drop', (e) => {
-                e.preventDefault();
-                area.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    const inputId = area.getAttribute('onclick').match(/'([^']+)'/)[1];
-                    const input = document.getElementById(inputId);
-                    input.files = files;
-                    input.dispatchEvent(new Event('change'));
-                }
-            });
-        });
-
-        // Audio file handling
-        audioFile.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                analyzeAudioBtn.disabled = false;
-                showAudioVisualizer();
-            }
-        });
-
-        // Image file handling
-        imageFile.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    imagePreview.style.display = 'block';
-                    analyzeImageBtn.disabled = false;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Audio visualizer
-        function showAudioVisualizer() {
-            audioVisualizer.style.display = 'flex';
-            createAudioBars();
-            animateBars();
-        }
-
-        function createAudioBars() {
-            audioVisualizer.innerHTML = '';
-            for (let i = 0; i < 60; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'bar';
-                bar.style.height = '5px';
-                audioVisualizer.appendChild(bar);
-            }
-        }
-
-        function animateBars() {
-            const bars = audioVisualizer.querySelectorAll('.bar');
-            setInterval(() => {
-                bars.forEach(bar => {
-                    const height = Math.random() * 90 + 5;
-                    bar.style.height = height + 'px';
-                });
-            }, 150);
-        }
-
-        // Analysis functions
-        analyzeAudioBtn.addEventListener('click', function() {
-            showLoading();
-            setTimeout(() => {
-                hideLoading();
-                showResults('audio');
-            }, 3500);
-        });
-
-        analyzeImageBtn.addEventListener('click', function() {
-            showLoading();
-            setTimeout(() => {
-                hideLoading();
-                showResults('image');
-            }, 3000);
-        });
-
-        function showLoading() {
-            loading.classList.add('show');
-            results.classList.remove('show');
-        }
-
-        function hideLoading() {
-            loading.classList.remove('show');
-        }
-
-        function showResults(type) {
-            results.classList.add('show');
-            
-            if (type === 'audio') {
-                resultsContent.innerHTML = `
-                    <div class="result-item healthy">
-                        <span class="result-icon">✅</span>
-                        <div class="result-text">
-                            <div class="result-value">Kovan Sağlığı: Mükemmel</div>
-                            <div class="result-description">Arı kolonisi güçlü ve aktif durumda</div>
-                        </div>
-                    </div>
-                    
-                    <div class="result-item healthy">
-                        <span class="result-icon">🎵</span>
-                        <div class="result-text">
-                            <div class="result-value">Frekans Profili: Normal</div>
-                            <div class="result-description">220-380 Hz arası optimal frekans dağılımı</div>
-                        </div>
-                    </div>
-                    
-                    <div class="result-item warning">
-                        <span class="result-icon">⚠️</span>
-                        <div class="result-text">
-                            <div class="result-value">Aktivite Seviyesi: Yüksek</div>
-                            <div class="result-description">Normal mevsimsel artış, izlenmeye devam edilmeli</div>
-                        </div>
-                    </div>
-                    
-                    <div class="result-item healthy">
-                        <span class="result-icon">👑</span>
-                        <div class="result-text">
-                            <div class="result-value">Kraliçe Durumu: Aktif</div>
-                            <div class="result-description">Kraliçe arı ses imzası net şekilde tespit edildi</div>
-                        </div>
-                    </div>
-                    
-                    <div class="result-item healthy">
-                        <span class="result-icon">🌡️</span>
-                        <div class="result-text">
-                            <div class="result-value">Termoregülasyon: İdeal</div>
-                            <div class="result-description">Kovan ısı düzenlemesi ses analizine göre normal</div>
-                        </div>
-                    </div>
-                `;
-            } else if (type === 'image') {
-                resultsContent.innerHTML = `
-                    <div class="result-item healthy">
-                        <span class="result-icon">✅</span>
-                        <div class="result-text">
-                            <div class="result-value">Genel Sağlık Durumu: Sağlıklı</div>
-                            <div class="result-description">Arının fiziksel görünümü tamamen normal</div>
-                        </div>
-                    </div>
-                    
-                    <div class="result-item healthy">
-                        <span class="result-icon">🦋</span>
-                        <div class="result-text">
-                            <div class="result-value">Kanat Analizi: Mükemmel</div>
-                            <div class="result-description">Kanatlar hasarsız, tam ve simetrik</div>
-                        </div>
-                    </div>
-                    
-                    <div class="result-item healthy">
-                        <span class="result-icon">🎨</span>
-                        <div class="result-text">
-                            <div class="result-value">Pigmentasyon: Normal</div>
-                            <div
